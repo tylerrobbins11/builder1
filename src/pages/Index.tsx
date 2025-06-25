@@ -68,7 +68,16 @@ const fetchInventory = async (): Promise<ApiResponse> => {
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorText = await response.text();
+      console.error("HTTP Error Response:", response.status, errorText);
+      throw new Error(`HTTP error! status: ${response.status}: ${errorText}`);
+    }
+
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const responseText = await response.text();
+      console.error("Non-JSON response received:", responseText);
+      throw new Error("Server returned non-JSON response");
     }
 
     return response.json();
