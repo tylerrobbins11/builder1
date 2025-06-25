@@ -55,7 +55,7 @@ interface ApiResponse {
 
 const fetchInventory = async (): Promise<ApiResponse> => {
   const response = await fetch(
-    "https://donohoo.easytree.io/inventory?token=175grzjKeAfg1OYRKpAmcJ3ebaYZYi9Cn%2FNg2Ht8pDQ",
+    "/api/inventory?token=175grzjKeAfg1OYRKpAmcJ3ebaYZYi9Cn%2FNg2Ht8pDQ",
   );
 
   if (!response.ok) {
