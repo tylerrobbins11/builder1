@@ -473,90 +473,29 @@ const Index = () => {
                 )}
               >
                 <CardHeader className={cn(viewMode === "list" && "flex-1")}>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                        {vehicle.homenet_model_number || "Unknown Model"}
-                      </CardTitle>
-                      <CardDescription className="mt-1 line-clamp-2">
-                        {vehicle.homenet_standard_trim &&
-                          `${vehicle.homenet_standard_trim} Trim`}
-                      </CardDescription>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {vehicle.homenet_certified === "1" && (
-                      <Badge className="bg-green-100 text-green-800">
-                        Certified
-                      </Badge>
-                    )}
-                    {vehicle.oper_branded === "Yes" && (
-                      <Badge variant="destructive">Branded</Badge>
-                    )}
-                    {vehicle.homenet_standard_trim && (
-                      <Badge variant="outline">
-                        {vehicle.homenet_standard_trim}
-                      </Badge>
-                    )}
-                  </div>
+                  <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                    {vehicle.homenet_vehicle_title ||
+                      "Vehicle Title Not Available"}
+                  </CardTitle>
+                  <CardDescription className="mt-2 text-sm text-muted-foreground">
+                    {vehicle.homenet_eng_description ||
+                      "Engine description not available"}
+                  </CardDescription>
                 </CardHeader>
 
-                <CardContent
-                  className={cn(
-                    viewMode === "list" && "flex items-center space-x-6",
+                <CardContent>
+                  {vehicle.web_url && (
+                    <Button asChild className="w-full gap-2" variant="default">
+                      <a
+                        href={vehicle.web_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        View Details
+                      </a>
+                    </Button>
                   )}
-                >
-                  <div className="space-y-3">
-                    {vehicle.homenet_eng_liters && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground flex items-center gap-2">
-                          <Fuel className="h-4 w-4" />
-                          Engine:
-                        </span>
-                        <span className="text-sm font-medium">
-                          {vehicle.homenet_eng_liters}
-                        </span>
-                      </div>
-                    )}
-
-                    {vehicle.oper_pt_warr_miles_left &&
-                      vehicle.oper_pt_warr_miles_left !== "NULL" && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-muted-foreground flex items-center gap-2">
-                            <Shield className="h-4 w-4" />
-                            Warranty:
-                          </span>
-                          <span className="text-sm font-medium">
-                            {vehicle.oper_pt_warr_miles_left} mi
-                          </span>
-                        </div>
-                      )}
-
-                    {vehicle.vom_pdf_tpw && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          Date:
-                        </span>
-                        <span className="text-sm font-medium">
-                          {new Date(vehicle.vom_pdf_tpw).toLocaleDateString()}
-                        </span>
-                      </div>
-                    )}
-
-                    {vehicle.homenet_dealer_address && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                          Location:
-                        </span>
-                        <span className="text-sm font-medium truncate max-w-[150px]">
-                          {vehicle.homenet_dealer_address}
-                        </span>
-                      </div>
-                    )}
-                  </div>
                 </CardContent>
               </Card>
             ))}
