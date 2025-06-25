@@ -236,11 +236,27 @@ const Index = () => {
                   <Car className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">
+                  <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
                     Vehicle Inventory
+                    {data && (
+                      <Badge
+                        variant={
+                          (data as any)._dataSource === "api"
+                            ? "default"
+                            : "secondary"
+                        }
+                        className="text-xs"
+                      >
+                        {(data as any)._dataSource === "api"
+                          ? "Live Data"
+                          : "Demo Mode"}
+                      </Badge>
+                    )}
                   </h1>
                   <p className="text-sm text-muted-foreground">
-                    Real-time automotive inventory management
+                    {(data as any)?._dataSource === "api"
+                      ? "Real-time automotive inventory management"
+                      : "Demo with sample data - API connection unavailable"}
                   </p>
                 </div>
               </div>
