@@ -52,6 +52,9 @@ interface ApiResponse {
 const MOCK_DATA: ApiResponse = {
   data: [
     {
+      homenet_vehicle_title: "2023 Chevrolet Silverado 1500 LT",
+      homenet_eng_description: "6.6L V8 Turbo Diesel",
+      web_url: "https://example.com/vehicle/CK20743",
       homenet_model_number: "CK20743",
       homenet_dealer_address: "1000 Greenhill Blvd",
       homenet_certified: "1",
@@ -63,6 +66,9 @@ const MOCK_DATA: ApiResponse = {
       upu_comment: "Excellent condition",
     },
     {
+      homenet_vehicle_title: "2022 Ford F-150 XLT",
+      homenet_eng_description: "5.0L V8 Coyote",
+      web_url: "https://example.com/vehicle/FD15892",
       homenet_model_number: "FD15892",
       homenet_dealer_address: "2500 Oak Street",
       homenet_certified: "0",
@@ -74,6 +80,9 @@ const MOCK_DATA: ApiResponse = {
       upu_comment: "Previous accident",
     },
     {
+      homenet_vehicle_title: "2024 Toyota Highlander Limited",
+      homenet_eng_description: "3.5L V6 Hybrid",
+      web_url: "https://example.com/vehicle/TY98456",
       homenet_model_number: "TY98456",
       homenet_dealer_address: "750 Main Avenue",
       homenet_certified: "1",
@@ -85,6 +94,9 @@ const MOCK_DATA: ApiResponse = {
       upu_comment: "Like new",
     },
     {
+      homenet_vehicle_title: "2023 Honda Civic Sport",
+      homenet_eng_description: "2.4L VTEC Turbo",
+      web_url: "https://example.com/vehicle/HD78123",
       homenet_model_number: "HD78123",
       homenet_dealer_address: "1200 Pine Road",
       homenet_certified: "0",
@@ -96,6 +108,9 @@ const MOCK_DATA: ApiResponse = {
       upu_comment: "Well maintained",
     },
     {
+      homenet_vehicle_title: "2024 Lexus NX 350 Premium",
+      homenet_eng_description: "4.0L V6 Twin Turbo",
+      web_url: "https://example.com/vehicle/NX45678",
       homenet_model_number: "NX45678",
       homenet_dealer_address: "500 Elm Street",
       homenet_certified: "1",
@@ -107,6 +122,9 @@ const MOCK_DATA: ApiResponse = {
       upu_comment: "Fleet vehicle",
     },
     {
+      homenet_vehicle_title: "2023 BMW M5 Competition",
+      homenet_eng_description: "4.4L V8 Twin Turbo",
+      web_url: "https://example.com/vehicle/BMW98765",
       homenet_model_number: "BMW98765",
       homenet_dealer_address: "300 Luxury Lane",
       homenet_certified: "1",
