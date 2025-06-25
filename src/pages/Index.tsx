@@ -485,15 +485,19 @@ const Index = () => {
 
                 <CardContent>
                   {vehicle.web_url && (
-                    <Button asChild className="w-full gap-2" variant="default">
-                      <a
-                        href={vehicle.web_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                        View Details
-                      </a>
+                    <Button
+                      className="w-full gap-2"
+                      variant="default"
+                      onClick={() =>
+                        window.open(
+                          vehicle.web_url,
+                          "_blank",
+                          "noopener,noreferrer",
+                        )
+                      }
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      View Details
                     </Button>
                   )}
                 </CardContent>
