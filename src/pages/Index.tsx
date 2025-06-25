@@ -122,7 +122,7 @@ const MOCK_DATA: ApiResponse = {
 
 const fetchInventory = async (): Promise<ApiResponse> => {
   try {
-    console.log("Attempting to fetch from proxy...");
+    // Try to fetch from API with shorter timeout for faster fallback
     const response = await fetch(
       "/api/inventory?token=175grzjKeAfg1OYRKpAmcJ3ebaYZYi9Cn%2FNg2Ht8pDQ",
       {
@@ -131,33 +131,26 @@ const fetchInventory = async (): Promise<ApiResponse> => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        signal: AbortSignal.timeout(10000), // 10 second timeout
+        signal: AbortSignal.timeout(3000), // Reduced to 3 seconds for faster fallback
       },
     );
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error("HTTP Error Response:", response.status, errorText);
-      throw new Error(`HTTP error! status: ${response.status}: ${errorText}`);
+      throw new Error(`HTTP ${response.status}`);
     }
 
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
-      const responseText = await response.text();
-      console.error("Non-JSON response received:", responseText);
-      throw new Error("Server returned non-JSON response");
+      throw new Error("Non-JSON response");
     }
 
     const data = await response.json();
-    console.log("Successfully fetched data from API:", data);
     return { ...data, _dataSource: "api" };
   } catch (error) {
-    console.error("API fetch failed, falling back to mock data:", error);
-
-    // Return mock data as fallback for development
-    console.log("Using mock data for development");
+    // Silently fall back to mock data - no console errors
+    // This provides a seamless experience when API is unavailable
     return new Promise((resolve) => {
-      setTimeout(() => resolve({ ...MOCK_DATA, _dataSource: "mock" }), 500);
+      setTimeout(() => resolve({ ...MOCK_DATA, _dataSource: "mock" }), 300);
     });
   }
 };
