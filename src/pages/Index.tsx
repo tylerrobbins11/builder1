@@ -325,9 +325,21 @@ const Index = () => {
               <div>
                 <CardTitle>Vehicle Inventory</CardTitle>
                 <CardDescription>
-                  {data?.data?.length
-                    ? `${data.data.length} vehicles in inventory`
-                    : "Loading inventory..."}
+                  {searchTerm ? (
+                    <>
+                      {filteredItems.length} of {data?.data?.length || 0}{" "}
+                      vehicles match "{searchTerm}"
+                      {filteredItems.length > 0 && (
+                        <span className="text-xs text-muted-foreground ml-2">
+                          (searched all fields)
+                        </span>
+                      )}
+                    </>
+                  ) : data?.data?.length ? (
+                    `${data.data.length} vehicles in inventory`
+                  ) : (
+                    "Loading inventory..."
+                  )}
                 </CardDescription>
               </div>
             </div>
