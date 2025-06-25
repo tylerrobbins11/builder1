@@ -13,49 +13,43 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
-  Package,
+  Car,
   Search,
   TrendingUp,
   AlertTriangle,
-  Box,
+  MapPin,
   DollarSign,
   RefreshCw,
   Filter,
   Grid3X3,
   List,
-  Boxes,
+  Calendar,
+  Gauge,
+  Fuel,
+  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface InventoryItem {
-  pk: number;
-  name: string;
-  description: string;
-  category?: string;
-  in_stock: number;
-  minimum_stock?: number;
-  location?: string;
-  units?: string;
-  price?: number;
-  image?: string;
-  active: boolean;
-  assembly: boolean;
-  component: boolean;
-  purchaseable: boolean;
-  salable: boolean;
-  virtual: boolean;
+interface VehicleItem {
+  upu_comment?: string;
+  homenet_model_number?: string;
+  homenet_dealer_address?: string;
+  oper_pt_warr_miles_left?: string;
+  homenet_certified?: string;
+  homenet_standard_trim?: string;
+  oper_branded?: string;
+  homenet_eng_liters?: string;
+  vom_pdf_tpw?: string;
+  info_matrix_de?: string;
+  [key: string]: any; // For any other dynamic fields
 }
 
 interface ApiResponse {
-  count: number;
-  next?: string;
-  previous?: string;
-  results: InventoryItem[];
+  data: VehicleItem[];
 }
 
 const fetchInventory = async (): Promise<ApiResponse> => {
   try {
-    // Try proxy first
     const response = await fetch(
       "/api/inventory?token=175grzjKeAfg1OYRKpAmcJ3ebaYZYi9Cn%2FNg2Ht8pDQ",
       {
@@ -82,33 +76,10 @@ const fetchInventory = async (): Promise<ApiResponse> => {
 
     return response.json();
   } catch (error) {
-    // If proxy fails, try direct request with mode: 'cors'
-    console.warn("Proxy request failed, trying direct CORS request:", error);
-
-    try {
-      const response = await fetch(
-        "https://donohoo.easytree.io/inventory?token=175grzjKeAfg1OYRKpAmcJ3ebaYZYi9Cn%2FNg2Ht8pDQ",
-        {
-          method: "GET",
-          mode: "cors",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      return response.json();
-    } catch (corsError) {
-      console.error("Both proxy and CORS requests failed:", corsError);
-      throw new Error(
-        "Unable to fetch inventory data. Please check your network connection or contact support.",
-      );
-    }
+    console.error("Failed to fetch inventory data:", error);
+    throw new Error(
+      "Unable to fetch inventory data. Please check your network connection or contact support.",
+    );
   }
 };
 
@@ -123,24 +94,30 @@ const Index = () => {
   });
 
   const filteredItems =
-    data?.results?.filter(
+    data?.data?.filter(
       (item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.category?.toLowerCase().includes(searchTerm.toLowerCase()),
+        item.homenet_model_number
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        item.homenet_standard_trim
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        item.homenet_dealer_address
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()),
     ) || [];
 
-  const stats = data?.results
+  const stats = data?.data
     ? {
-        totalItems: data.results.length,
-        lowStock: data.results.filter(
-          (item) => item.minimum_stock && item.in_stock <= item.minimum_stock,
+        totalVehicles: data.data.length,
+        certified: data.data.filter((item) => item.homenet_certified === "1")
+          .length,
+        branded: data.data.filter((item) => item.oper_branded === "Yes").length,
+        withWarranty: data.data.filter(
+          (item) =>
+            item.oper_pt_warr_miles_left &&
+            item.oper_pt_warr_miles_left !== "NULL",
         ).length,
-        outOfStock: data.results.filter((item) => item.in_stock === 0).length,
-        totalValue: data.results.reduce(
-          (sum, item) => sum + (item.price || 0) * item.in_stock,
-          0,
-        ),
       }
     : null;
 
@@ -153,14 +130,14 @@ const Index = () => {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
                 <div className="p-2 bg-primary rounded-xl">
-                  <Boxes className="h-6 w-6 text-primary-foreground" />
+                  <Car className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-foreground">
-                    Inventory Hub
+                    Vehicle Inventory
                   </h1>
                   <p className="text-sm text-muted-foreground">
-                    Real-time inventory management
+                    Real-time automotive inventory management
                   </p>
                 </div>
               </div>
@@ -210,13 +187,15 @@ const Index = () => {
             <Card className="border-0 shadow-lg bg-gradient-to-br from-primary to-primary/80 text-primary-foreground">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium opacity-90">
-                  Total Items
+                  Total Vehicles
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold">{stats.totalItems}</div>
-                  <Package className="h-8 w-8 opacity-80" />
+                  <div className="text-3xl font-bold">
+                    {stats.totalVehicles}
+                  </div>
+                  <Car className="h-8 w-8 opacity-80" />
                 </div>
               </CardContent>
             </Card>
@@ -224,27 +203,27 @@ const Index = () => {
             <Card className="border-0 shadow-lg bg-gradient-to-br from-accent to-accent/80 text-accent-foreground">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium opacity-90">
-                  Low Stock
+                  Certified
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold">{stats.lowStock}</div>
-                  <AlertTriangle className="h-8 w-8 opacity-80" />
+                  <div className="text-3xl font-bold">{stats.certified}</div>
+                  <Shield className="h-8 w-8 opacity-80" />
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border-0 shadow-lg bg-gradient-to-br from-destructive to-destructive/80 text-destructive-foreground">
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-orange-500 to-orange-600 text-white">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium opacity-90">
-                  Out of Stock
+                  Branded
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold">{stats.outOfStock}</div>
-                  <Box className="h-8 w-8 opacity-80" />
+                  <div className="text-3xl font-bold">{stats.branded}</div>
+                  <AlertTriangle className="h-8 w-8 opacity-80" />
                 </div>
               </CardContent>
             </Card>
@@ -252,15 +231,13 @@ const Index = () => {
             <Card className="border-0 shadow-lg bg-gradient-to-br from-green-500 to-green-600 text-white">
               <CardHeader className="pb-3">
                 <CardTitle className="text-sm font-medium opacity-90">
-                  Total Value
+                  With Warranty
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold">
-                    ${stats.totalValue.toLocaleString()}
-                  </div>
-                  <DollarSign className="h-8 w-8 opacity-80" />
+                  <div className="text-3xl font-bold">{stats.withWarranty}</div>
+                  <Calendar className="h-8 w-8 opacity-80" />
                 </div>
               </CardContent>
             </Card>
@@ -272,10 +249,10 @@ const Index = () => {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Inventory Items</CardTitle>
+                <CardTitle>Vehicle Inventory</CardTitle>
                 <CardDescription>
-                  {data?.count
-                    ? `${data.count} total items`
+                  {data?.data?.length
+                    ? `${data.data.length} vehicles in inventory`
                     : "Loading inventory..."}
                 </CardDescription>
               </div>
@@ -286,7 +263,7 @@ const Index = () => {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search items..."
+                  placeholder="Search by model, trim, or location..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -305,8 +282,8 @@ const Index = () => {
           <Alert className="mb-8 border-destructive/50 bg-destructive/10">
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              Failed to load inventory data. Please check your connection and
-              try again.
+              Failed to load vehicle inventory data. Please check your
+              connection and try again.
               <Button
                 variant="outline"
                 size="sm"
@@ -345,7 +322,7 @@ const Index = () => {
           </div>
         )}
 
-        {/* Inventory Grid/List */}
+        {/* Vehicle Grid/List */}
         {!isLoading && !error && (
           <div
             className={cn(
@@ -355,12 +332,11 @@ const Index = () => {
                 : "grid-cols-1",
             )}
           >
-            {filteredItems.map((item) => (
+            {filteredItems.map((vehicle, index) => (
               <Card
-                key={item.pk}
+                key={index}
                 className={cn(
                   "border-0 shadow-lg hover:shadow-xl transition-all duration-300 group",
-                  item.in_stock === 0 && "opacity-75",
                   viewMode === "list" && "flex-row",
                 )}
               >
@@ -368,29 +344,27 @@ const Index = () => {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                        {item.name}
+                        {vehicle.homenet_model_number || "Unknown Model"}
                       </CardTitle>
                       <CardDescription className="mt-1 line-clamp-2">
-                        {item.description}
+                        {vehicle.homenet_standard_trim &&
+                          `${vehicle.homenet_standard_trim} Trim`}
                       </CardDescription>
                     </div>
                   </div>
 
                   <div className="flex flex-wrap gap-2 mt-3">
-                    {item.assembly && (
-                      <Badge variant="secondary">Assembly</Badge>
-                    )}
-                    {item.component && (
-                      <Badge variant="outline">Component</Badge>
-                    )}
-                    {item.purchaseable && (
+                    {vehicle.homenet_certified === "1" && (
                       <Badge className="bg-green-100 text-green-800">
-                        Purchaseable
+                        Certified
                       </Badge>
                     )}
-                    {item.salable && (
-                      <Badge className="bg-blue-100 text-blue-800">
-                        Salable
+                    {vehicle.oper_branded === "Yes" && (
+                      <Badge variant="destructive">Branded</Badge>
+                    )}
+                    {vehicle.homenet_standard_trim && (
+                      <Badge variant="outline">
+                        {vehicle.homenet_standard_trim}
                       </Badge>
                     )}
                   </div>
@@ -402,55 +376,51 @@ const Index = () => {
                   )}
                 >
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">
-                        Stock:
-                      </span>
-                      <div className="flex items-center space-x-2">
-                        <Badge
-                          variant={
-                            item.in_stock === 0
-                              ? "destructive"
-                              : item.minimum_stock &&
-                                  item.in_stock <= item.minimum_stock
-                                ? "outline"
-                                : "secondary"
-                          }
-                        >
-                          {item.in_stock} {item.units || "units"}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    {item.minimum_stock && (
+                    {vehicle.homenet_eng_liters && (
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">
-                          Min Stock:
+                        <span className="text-sm text-muted-foreground flex items-center gap-2">
+                          <Fuel className="h-4 w-4" />
+                          Engine:
                         </span>
                         <span className="text-sm font-medium">
-                          {item.minimum_stock}
+                          {vehicle.homenet_eng_liters}
                         </span>
                       </div>
                     )}
 
-                    {item.price && (
+                    {vehicle.oper_pt_warr_miles_left &&
+                      vehicle.oper_pt_warr_miles_left !== "NULL" && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-muted-foreground flex items-center gap-2">
+                            <Shield className="h-4 w-4" />
+                            Warranty:
+                          </span>
+                          <span className="text-sm font-medium">
+                            {vehicle.oper_pt_warr_miles_left} mi
+                          </span>
+                        </div>
+                      )}
+
+                    {vehicle.vom_pdf_tpw && (
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">
-                          Price:
+                        <span className="text-sm text-muted-foreground flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          Date:
                         </span>
                         <span className="text-sm font-medium">
-                          ${item.price}
+                          {new Date(vehicle.vom_pdf_tpw).toLocaleDateString()}
                         </span>
                       </div>
                     )}
 
-                    {item.location && (
+                    {vehicle.homenet_dealer_address && (
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-sm text-muted-foreground flex items-center gap-2">
+                          <MapPin className="h-4 w-4" />
                           Location:
                         </span>
-                        <span className="text-sm font-medium">
-                          {item.location}
+                        <span className="text-sm font-medium truncate max-w-[150px]">
+                          {vehicle.homenet_dealer_address}
                         </span>
                       </div>
                     )}
@@ -465,10 +435,10 @@ const Index = () => {
         {!isLoading && !error && filteredItems.length === 0 && searchTerm && (
           <Card className="border-0 shadow-lg">
             <CardContent className="text-center py-12">
-              <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No items found</h3>
+              <Car className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No vehicles found</h3>
               <p className="text-muted-foreground mb-4">
-                No inventory items match your search criteria.
+                No vehicles match your search criteria.
               </p>
               <Button variant="outline" onClick={() => setSearchTerm("")}>
                 Clear search
