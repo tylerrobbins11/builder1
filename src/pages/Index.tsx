@@ -131,7 +131,7 @@ const fetchInventory = async (): Promise<ApiResponse> => {
     // Return mock data as fallback for development
     console.log("Using mock data for development");
     return new Promise((resolve) => {
-      setTimeout(() => resolve(MOCK_DATA), 1000); // Simulate network delay
+      setTimeout(() => resolve(MOCK_DATA), 500); // Reduced delay for better UX
     });
   }
 };
