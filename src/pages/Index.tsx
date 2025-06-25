@@ -165,6 +165,9 @@ const fetchInventory = async (): Promise<ApiResponse> => {
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [dataSource, setDataSource] = useState<"api" | "mock" | "loading">(
+    "loading",
+  );
 
   const { data, isLoading, error, refetch, isRefetching } = useQuery({
     queryKey: ["inventory"],
