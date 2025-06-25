@@ -147,18 +147,20 @@ const Index = () => {
   });
 
   const filteredItems =
-    data?.data?.filter(
-      (item) =>
-        item.homenet_model_number
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        item.homenet_standard_trim
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
-        item.homenet_dealer_address
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()),
-    ) || [];
+    data?.data?.filter((item) => {
+      if (!searchTerm) return true;
+
+      const searchLower = searchTerm.toLowerCase();
+
+      // Search through ALL fields in the item object
+      return Object.values(item).some((value) => {
+        if (value === null || value === undefined) return false;
+
+        // Convert value to string and search
+        const stringValue = String(value).toLowerCase();
+        return stringValue.includes(searchLower);
+      });
+    }) || [];
 
   const stats = data?.data
     ? {
