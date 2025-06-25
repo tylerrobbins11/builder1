@@ -166,6 +166,9 @@ const Index = () => {
     queryKey: ["inventory"],
     queryFn: fetchInventory,
     refetchInterval: 30000, // Refetch every 30 seconds
+    retry: false, // Don't retry failed requests since we have fallback
+    refetchOnWindowFocus: false, // Prevent unnecessary refetches
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
   });
 
   // Helper function to find which fields match the search
