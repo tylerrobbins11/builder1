@@ -24,6 +24,18 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        success: {
+          DEFAULT: "hsl(160 75% 45%)",
+          foreground: "hsl(0 0% 98%)",
+        },
+        warning: {
+          DEFAULT: "hsl(38 92% 50%)",
+          foreground: "hsl(0 0% 98%)",
+        },
+        info: {
+          DEFAULT: "hsl(217 91% 60%)",
+          foreground: "hsl(0 0% 98%)",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
