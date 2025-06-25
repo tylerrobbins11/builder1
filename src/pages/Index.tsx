@@ -27,6 +27,7 @@ import {
   Gauge,
   Fuel,
   Shield,
+  ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
