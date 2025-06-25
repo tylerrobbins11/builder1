@@ -542,7 +542,7 @@ const Index = () => {
         )}
 
         {/* Empty State */}
-        {!isLoading && !error && filteredItems.length === 0 && searchTerm && (
+        {!isLoading && filteredItems.length === 0 && searchTerm && (
           <Card className="border-0 shadow-lg">
             <CardContent className="text-center py-12">
               <Car className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
