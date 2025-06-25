@@ -54,15 +54,53 @@ interface ApiResponse {
 }
 
 const fetchInventory = async (): Promise<ApiResponse> => {
-  const response = await fetch(
-    "/api/inventory?token=175grzjKeAfg1OYRKpAmcJ3ebaYZYi9Cn%2FNg2Ht8pDQ",
-  );
+  try {
+    // Try proxy first
+    const response = await fetch(
+      "/api/inventory?token=175grzjKeAfg1OYRKpAmcJ3ebaYZYi9Cn%2FNg2Ht8pDQ",
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      },
+    );
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    // If proxy fails, try direct request with mode: 'cors'
+    console.warn("Proxy request failed, trying direct CORS request:", error);
+
+    try {
+      const response = await fetch(
+        "https://donohoo.easytree.io/inventory?token=175grzjKeAfg1OYRKpAmcJ3ebaYZYi9Cn%2FNg2Ht8pDQ",
+        {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return response.json();
+    } catch (corsError) {
+      console.error("Both proxy and CORS requests failed:", corsError);
+      throw new Error(
+        "Unable to fetch inventory data. Please check your network connection or contact support.",
+      );
+    }
   }
-
-  return response.json();
 };
 
 const Index = () => {
