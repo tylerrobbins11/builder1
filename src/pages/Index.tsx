@@ -31,6 +31,9 @@ import {
 import { cn } from "@/lib/utils";
 
 interface VehicleItem {
+  homenet_vehicle_title?: string;
+  homenet_eng_description?: string;
+  web_url?: string;
   upu_comment?: string;
   homenet_model_number?: string;
   homenet_dealer_address?: string;
