@@ -433,7 +433,7 @@ const Index = () => {
         )}
 
         {/* Vehicle Grid/List */}
-        {!isLoading && !error && (
+        {!isLoading && (
           <div
             className={cn(
               "grid gap-6",
