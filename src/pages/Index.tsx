@@ -76,7 +76,7 @@ const Index = () => {
   });
 
   const filteredItems =
-    data?.results.filter(
+    data?.results?.filter(
       (item) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
