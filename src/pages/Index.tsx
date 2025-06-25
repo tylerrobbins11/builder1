@@ -60,6 +60,7 @@ const MOCK_DATA: ApiResponse = {
       homenet_eng_liters: "6.6L",
       vom_pdf_tpw: "2025-06-09 00:00:00.000",
       oper_pt_warr_miles_left: "50000",
+      upu_comment: "Excellent condition",
     },
     {
       homenet_model_number: "FD15892",
@@ -70,6 +71,7 @@ const MOCK_DATA: ApiResponse = {
       homenet_eng_liters: "5.0L",
       vom_pdf_tpw: "2024-12-15 00:00:00.000",
       oper_pt_warr_miles_left: "NULL",
+      upu_comment: "Previous accident",
     },
     {
       homenet_model_number: "TY98456",
@@ -80,6 +82,7 @@ const MOCK_DATA: ApiResponse = {
       homenet_eng_liters: "3.5L",
       vom_pdf_tpw: "2025-03-20 00:00:00.000",
       oper_pt_warr_miles_left: "75000",
+      upu_comment: "Like new",
     },
     {
       homenet_model_number: "HD78123",
@@ -90,6 +93,29 @@ const MOCK_DATA: ApiResponse = {
       homenet_eng_liters: "2.4L",
       vom_pdf_tpw: "2024-11-08 00:00:00.000",
       oper_pt_warr_miles_left: "60000",
+      upu_comment: "Well maintained",
+    },
+    {
+      homenet_model_number: "NX45678",
+      homenet_dealer_address: "500 Elm Street",
+      homenet_certified: "1",
+      homenet_standard_trim: "Premium",
+      oper_branded: "No",
+      homenet_eng_liters: "4.0L",
+      vom_pdf_tpw: "2025-01-15 00:00:00.000",
+      oper_pt_warr_miles_left: "100000",
+      upu_comment: "Fleet vehicle",
+    },
+    {
+      homenet_model_number: "BMW98765",
+      homenet_dealer_address: "300 Luxury Lane",
+      homenet_certified: "1",
+      homenet_standard_trim: "M-Series",
+      oper_branded: "No",
+      homenet_eng_liters: "4.4L",
+      vom_pdf_tpw: "2024-10-30 00:00:00.000",
+      oper_pt_warr_miles_left: "80000",
+      upu_comment: "Performance package",
     },
   ],
 };
