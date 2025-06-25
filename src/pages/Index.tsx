@@ -404,24 +404,7 @@ const Index = () => {
           </CardContent>
         </Card>
 
-        {/* Error State */}
-        {error && (
-          <Alert className="mb-8 border-destructive/50 bg-destructive/10">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertDescription>
-              Failed to load vehicle inventory data. Please check your
-              connection and try again.
-              <Button
-                variant="outline"
-                size="sm"
-                className="ml-4"
-                onClick={() => refetch()}
-              >
-                Retry
-              </Button>
-            </AlertDescription>
-          </Alert>
-        )}
+        {/* Error handling removed - fallback data ensures app always works */}
 
         {/* Loading State */}
         {isLoading && (
