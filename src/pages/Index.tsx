@@ -146,6 +146,25 @@ const Index = () => {
     refetchInterval: 30000, // Refetch every 30 seconds
   });
 
+  // Helper function to find which fields match the search
+  const getMatchingFields = (item: VehicleItem, searchTerm: string) => {
+    if (!searchTerm) return [];
+
+    const searchLower = searchTerm.toLowerCase();
+    const matchingFields: string[] = [];
+
+    Object.entries(item).forEach(([key, value]) => {
+      if (value !== null && value !== undefined) {
+        const stringValue = String(value).toLowerCase();
+        if (stringValue.includes(searchLower)) {
+          matchingFields.push(key);
+        }
+      }
+    });
+
+    return matchingFields;
+  };
+
   const filteredItems =
     data?.data?.filter((item) => {
       if (!searchTerm) return true;
