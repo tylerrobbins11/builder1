@@ -150,14 +150,14 @@ const fetchInventory = async (): Promise<ApiResponse> => {
 
     const data = await response.json();
     console.log("Successfully fetched data from API:", data);
-    return data;
+    return { ...data, _dataSource: "api" };
   } catch (error) {
     console.error("API fetch failed, falling back to mock data:", error);
 
     // Return mock data as fallback for development
     console.log("Using mock data for development");
     return new Promise((resolve) => {
-      setTimeout(() => resolve(MOCK_DATA), 500); // Reduced delay for better UX
+      setTimeout(() => resolve({ ...MOCK_DATA, _dataSource: "mock" }), 500);
     });
   }
 };
