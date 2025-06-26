@@ -297,60 +297,60 @@ const Index = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {/* Engine */}
-                    {vehicle.homenet_eng_description && (
-                      <div>
-                        <p className="text-sm text-muted-foreground">Engine</p>
-                        <p className="font-medium">
-                          {vehicle.homenet_eng_description}
-                        </p>
+                    {/* Colors Row */}
+                    {(vehicle.homenet_ext_color ||
+                      vehicle.homenet_int_color) && (
+                      <div className="grid grid-cols-2 gap-4">
+                        {vehicle.homenet_ext_color && (
+                          <div>
+                            <p className="text-sm text-muted-foreground">
+                              Exterior Color
+                            </p>
+                            <p className="font-medium">
+                              {vehicle.homenet_ext_color}
+                            </p>
+                          </div>
+                        )}
+                        {vehicle.homenet_int_color && (
+                          <div>
+                            <p className="text-sm text-muted-foreground">
+                              Interior Color
+                            </p>
+                            <p className="font-medium">
+                              {vehicle.homenet_int_color}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     )}
 
-                    {/* Exterior Color */}
-                    {vehicle.homenet_ext_color && (
-                      <div>
-                        <p className="text-sm text-muted-foreground">
-                          Exterior Color
-                        </p>
-                        <p className="font-medium">
-                          {vehicle.homenet_ext_color}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Interior Color */}
-                    {vehicle.homenet_int_color && (
-                      <div>
-                        <p className="text-sm text-muted-foreground">
-                          Interior Color
-                        </p>
-                        <p className="font-medium">
-                          {vehicle.homenet_int_color}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* MSRP */}
-                    {vehicle.homenet_msrp && (
-                      <div>
-                        <p className="text-sm text-muted-foreground">MSRP</p>
-                        <p className="font-medium text-lg">
-                          ${parseInt(vehicle.homenet_msrp).toLocaleString()}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Price */}
-                    {vehicle.homenet_selling_price && (
-                      <div>
-                        <p className="text-sm text-muted-foreground">Price</p>
-                        <p className="font-bold text-xl text-green-600">
-                          $
-                          {parseInt(
-                            vehicle.homenet_selling_price,
-                          ).toLocaleString()}
-                        </p>
+                    {/* Pricing Row */}
+                    {(vehicle.homenet_msrp ||
+                      vehicle.homenet_selling_price) && (
+                      <div className="grid grid-cols-2 gap-4">
+                        {vehicle.homenet_msrp && (
+                          <div>
+                            <p className="text-sm text-muted-foreground">
+                              MSRP
+                            </p>
+                            <p className="font-medium text-lg">
+                              ${parseInt(vehicle.homenet_msrp).toLocaleString()}
+                            </p>
+                          </div>
+                        )}
+                        {vehicle.homenet_selling_price && (
+                          <div>
+                            <p className="text-sm text-muted-foreground">
+                              Price
+                            </p>
+                            <p className="font-bold text-xl text-green-600">
+                              $
+                              {parseInt(
+                                vehicle.homenet_selling_price,
+                              ).toLocaleString()}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     )}
                     {/* Link Button - Only show if web_url exists */}
