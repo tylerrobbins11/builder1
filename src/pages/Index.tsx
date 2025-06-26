@@ -134,13 +134,6 @@ const FALLBACK_DATA: ApiResponse = {
 
 // Fetch actual inventory data with fallback
 const fetchInventory = async (): Promise<ApiResponse> => {
-  // For now, let's use fallback data to ensure the page works
-  // You can uncomment the API call below when ready
-  console.log("Using fallback data for reliable display");
-  return Promise.resolve({ ...FALLBACK_DATA, _dataSource: "fallback" });
-
-  /*
-  // Uncomment this section to enable API calls:
   try {
     console.log("Attempting to fetch inventory data...");
     const response = await fetch(
@@ -151,7 +144,7 @@ const fetchInventory = async (): Promise<ApiResponse> => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        signal: AbortSignal.timeout(3000),
+        signal: AbortSignal.timeout(5000), // 5 second timeout for API
       },
     );
 
@@ -166,7 +159,6 @@ const fetchInventory = async (): Promise<ApiResponse> => {
     console.log("API failed, using fallback data:", error);
     return Promise.resolve({ ...FALLBACK_DATA, _dataSource: "fallback" });
   }
-  */
 };
 
 const Index = () => {
