@@ -208,60 +208,66 @@ const Index = () => {
       {!isLoading && (
         <>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {paginatedItems.map((vehicle, index) => (
-              <Card
-                key={vehicle.homenet_model_number || index}
-                className="hover:shadow-lg transition-shadow"
-              >
-                <CardHeader>
-                  <CardTitle className="text-lg">
-                    {vehicle.homenet_vehicle_title ||
-                      `${vehicle.homenet_year || ""} ${vehicle.homenet_make || ""} ${vehicle.homenet_model || ""}`.trim() ||
-                      "Vehicle Title"}
-                  </CardTitle>
-                  <CardDescription>
-                    {vehicle.homenet_eng_description ||
-                      "Engine info not available"}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  {vehicle.homenet_price && (
-                    <p className="text-xl font-bold">
-                      ${parseInt(vehicle.homenet_price).toLocaleString()}
-                    </p>
-                  )}
+            {paginatedItems.map((vehicle, index) => {
+              // Create a unique key by combining multiple fields
+              const uniqueKey = `${vehicle.homenet_model_number || "unknown"}-${vehicle.homenet_vehicle_title || "no-title"}-${startIndex + index}`;
 
-                  {vehicle.homenet_mileage && (
-                    <p className="text-sm text-muted-foreground">
-                      {parseInt(vehicle.homenet_mileage).toLocaleString()} miles
-                    </p>
-                  )}
+              return (
+                <Card
+                  key={uniqueKey}
+                  className="hover:shadow-lg transition-shadow"
+                >
+                  <CardHeader>
+                    <CardTitle className="text-lg">
+                      {vehicle.homenet_vehicle_title ||
+                        `${vehicle.homenet_year || ""} ${vehicle.homenet_make || ""} ${vehicle.homenet_model || ""}`.trim() ||
+                        "Vehicle Title"}
+                    </CardTitle>
+                    <CardDescription>
+                      {vehicle.homenet_eng_description ||
+                        "Engine info not available"}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-2">
+                    {vehicle.homenet_price && (
+                      <p className="text-xl font-bold">
+                        ${parseInt(vehicle.homenet_price).toLocaleString()}
+                      </p>
+                    )}
 
-                  {(vehicle.homenet_exterior_color ||
-                    vehicle.homenet_interior_color) && (
-                    <p className="text-sm text-muted-foreground">
-                      {vehicle.homenet_exterior_color &&
-                        `Exterior: ${vehicle.homenet_exterior_color}`}
-                      {vehicle.homenet_exterior_color &&
-                        vehicle.homenet_interior_color &&
-                        " • "}
-                      {vehicle.homenet_interior_color &&
-                        `Interior: ${vehicle.homenet_interior_color}`}
-                    </p>
-                  )}
+                    {vehicle.homenet_mileage && (
+                      <p className="text-sm text-muted-foreground">
+                        {parseInt(vehicle.homenet_mileage).toLocaleString()}{" "}
+                        miles
+                      </p>
+                    )}
 
-                  {vehicle.web_url && (
-                    <Button
-                      className="w-full gap-2 mt-4"
-                      onClick={() => window.open(vehicle.web_url, "_blank")}
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      View Details
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+                    {(vehicle.homenet_exterior_color ||
+                      vehicle.homenet_interior_color) && (
+                      <p className="text-sm text-muted-foreground">
+                        {vehicle.homenet_exterior_color &&
+                          `Exterior: ${vehicle.homenet_exterior_color}`}
+                        {vehicle.homenet_exterior_color &&
+                          vehicle.homenet_interior_color &&
+                          " • "}
+                        {vehicle.homenet_interior_color &&
+                          `Interior: ${vehicle.homenet_interior_color}`}
+                      </p>
+                    )}
+
+                    {vehicle.web_url && (
+                      <Button
+                        className="w-full gap-2 mt-4"
+                        onClick={() => window.open(vehicle.web_url, "_blank")}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        View Details
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
 
           {/* Pagination Controls */}
