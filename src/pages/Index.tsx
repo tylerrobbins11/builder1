@@ -157,8 +157,8 @@ const fetchInventory = async (): Promise<ApiResponse> => {
     return { ...data, _dataSource: "api" };
   } catch (error) {
     console.log("API failed, using fallback data:", error);
-    // Return fallback data immediately
-    return { ...FALLBACK_DATA, _dataSource: "fallback" };
+    // Return fallback data immediately - no timeout
+    return Promise.resolve({ ...FALLBACK_DATA, _dataSource: "fallback" });
   }
 };
 
@@ -172,6 +172,14 @@ const Index = () => {
     queryFn: fetchInventory,
     retry: false,
     refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  // Debug logging
+  console.log("Component state:", {
+    isLoading,
+    data: data?.data?.length,
+    dataSource: (data as any)?._dataSource,
   });
 
   // Search filter
@@ -286,14 +294,7 @@ const Index = () => {
                 >
                   <CardHeader>
                     <CardTitle className="text-lg">
-                      {[
-                        vehicle.homenet_year,
-                        vehicle.homenet_make,
-                        vehicle.homenet_model,
-                        vehicle.homenet_standard_trim,
-                      ]
-                        .filter(Boolean)
-                        .join(" ") || "Vehicle Information"}
+                      {vehicle.homenet_vehicle_title || "Vehicle Information"}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
