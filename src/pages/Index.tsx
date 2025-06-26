@@ -27,6 +27,7 @@ interface VehicleItem {
   homenet_eng_description?: string;
   web_url?: string;
   homenet_price?: string;
+  homenet_msrp?: string;
   homenet_model_number?: string;
   homenet_year?: string;
   homenet_make?: string;
@@ -49,6 +50,7 @@ const FALLBACK_DATA: ApiResponse = {
       homenet_eng_description: "6.6L V8 Turbo Diesel",
       web_url: "https://example.com/vehicle/1",
       homenet_price: "45000",
+      homenet_msrp: "48000",
       homenet_model_number: "CK20743",
     },
     {
@@ -56,6 +58,7 @@ const FALLBACK_DATA: ApiResponse = {
       homenet_eng_description: "5.0L V8 Coyote",
       web_url: "https://example.com/vehicle/2",
       homenet_price: "38000",
+      homenet_msrp: "41000",
       homenet_model_number: "FD15892",
     },
     {
@@ -63,6 +66,7 @@ const FALLBACK_DATA: ApiResponse = {
       homenet_eng_description: "3.5L V6 Hybrid",
       web_url: "https://example.com/vehicle/3",
       homenet_price: "52000",
+      homenet_msrp: "55000",
       homenet_model_number: "TY98456",
     },
   ],
@@ -260,6 +264,26 @@ const Index = () => {
                         </p>
                         <p className="font-medium">
                           {vehicle.homenet_interior_color}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* MSRP */}
+                    {vehicle.homenet_msrp && (
+                      <div>
+                        <p className="text-sm text-muted-foreground">MSRP</p>
+                        <p className="font-medium text-lg">
+                          ${parseInt(vehicle.homenet_msrp).toLocaleString()}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Price */}
+                    {vehicle.homenet_price && (
+                      <div>
+                        <p className="text-sm text-muted-foreground">Price</p>
+                        <p className="font-bold text-xl text-green-600">
+                          ${parseInt(vehicle.homenet_price).toLocaleString()}
                         </p>
                       </div>
                     )}
