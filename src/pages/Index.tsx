@@ -28,9 +28,12 @@ import {
   Fuel,
   Shield,
   ExternalLink,
+  Paintbrush, // Assuming exterior color might use this
+  Palette, // Assuming interior color might use this
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+// Updated VehicleItem interface with new fields
 interface VehicleItem {
   homenet_vehicle_title?: string;
   homenet_eng_description?: string;
@@ -45,6 +48,14 @@ interface VehicleItem {
   homenet_eng_liters?: string;
   vom_pdf_tpw?: string;
   info_matrix_de?: string;
+  // New fields (adjust names based on your actual API response)
+  homenet_year?: string; // Assuming 'year' field
+  homenet_make?: string; // Assuming 'make' field
+  homenet_model?: string; // Assuming 'model' field (already have homenet_model_number)
+  homenet_mileage?: string; // Assuming 'mileage' field
+  homenet_exterior_color?: string; // Assuming 'exterior_color' field
+  homenet_interior_color?: string; // Assuming 'interior_color' field
+  homenet_price?: string; // Assuming 'price' field
   [key: string]: any; // For any other dynamic fields
 }
 
@@ -52,7 +63,7 @@ interface ApiResponse {
   data: VehicleItem[];
 }
 
-// Mock data for fallback
+// Mock data for fallback (added new fields to existing mock data)
 const MOCK_DATA: ApiResponse = {
   data: [
     {
@@ -67,6 +78,13 @@ const MOCK_DATA: ApiResponse = {
       vom_pdf_tpw: "2025-06-09 00:00:00.000",
       oper_pt_warr_miles_left: "50000",
       upu_comment: "Excellent condition",
+      homenet_year: "2023",
+      homenet_make: "Chevrolet",
+      homenet_model: "Silverado 1500",
+      homenet_mileage: "25000",
+      homenet_exterior_color: "Black",
+      homenet_interior_color: "Jet Black",
+      homenet_price: "45000",
     },
     {
       homenet_vehicle_title: "2022 Ford F-150 XLT",
@@ -80,6 +98,13 @@ const MOCK_DATA: ApiResponse = {
       vom_pdf_tpw: "2024-12-15 00:00:00.000",
       oper_pt_warr_miles_left: "NULL",
       upu_comment: "Previous accident",
+      homenet_year: "2022",
+      homenet_make: "Ford",
+      homenet_model: "F-150",
+      homenet_mileage: "35000",
+      homenet_exterior_color: "Oxford White",
+      homenet_interior_color: "Medium Dark Slate",
+      homenet_price: "38000",
     },
     {
       homenet_vehicle_title: "2024 Toyota Highlander Limited",
@@ -93,6 +118,13 @@ const MOCK_DATA: ApiResponse = {
       vom_pdf_tpw: "2025-03-20 00:00:00.000",
       oper_pt_warr_miles_left: "75000",
       upu_comment: "Like new",
+      homenet_year: "2024",
+      homenet_make: "Toyota",
+      homenet_model: "Highlander",
+      homenet_mileage: "10000",
+      homenet_exterior_color: "Blueprint",
+      homenet_interior_color: "Black Leather",
+      homenet_price: "52000",
     },
     {
       homenet_vehicle_title: "2023 Honda Civic Sport",
@@ -106,6 +138,13 @@ const MOCK_DATA: ApiResponse = {
       vom_pdf_tpw: "2024-11-08 00:00:00.000",
       oper_pt_warr_miles_left: "60000",
       upu_comment: "Well maintained",
+      homenet_year: "2023",
+      homenet_make: "Honda",
+      homenet_model: "Civic",
+      homenet_mileage: "18000",
+      homenet_exterior_color: "Rallye Red",
+      homenet_interior_color: "Black Cloth",
+      homenet_price: "28000",
     },
     {
       homenet_vehicle_title: "2024 Lexus NX 350 Premium",
@@ -114,11 +153,17 @@ const MOCK_DATA: ApiResponse = {
       homenet_model_number: "NX45678",
       homenet_dealer_address: "500 Elm Street",
       homenet_certified: "1",
-      homenet_standard_trim: "Premium",
       oper_branded: "No",
       vom_pdf_tpw: "2025-01-15 00:00:00.000",
       oper_pt_warr_miles_left: "100000",
       upu_comment: "Fleet vehicle",
+      homenet_year: "2024",
+      homenet_make: "Lexus",
+      homenet_model: "NX 350",
+      homenet_mileage: "5000",
+      homenet_exterior_color: "Atomic Silver",
+      homenet_interior_color: "Rich Cream",
+      homenet_price: "48000",
     },
     {
       homenet_vehicle_title: "2023 BMW M5 Competition",
@@ -132,6 +177,13 @@ const MOCK_DATA: ApiResponse = {
       vom_pdf_tpw: "2024-10-30 00:00:00.000",
       oper_pt_warr_miles_left: "80000",
       upu_comment: "Performance package",
+      homenet_year: "2023",
+      homenet_make: "BMW",
+      homenet_model: "M5",
+      homenet_mileage: "12000",
+      homenet_exterior_color: "Brands Hatch Grey",
+      homenet_interior_color: "Black Merino Leather",
+      homenet_price: "110000",
     },
   ],
 };
@@ -468,8 +520,16 @@ const Index = () => {
               >
                 <CardHeader className={cn(viewMode === "list" && "flex-1")}>
                   <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                    {vehicle.homenet_vehicle_title ||
+                    {vehicle.homenet_year} {vehicle.homenet_make}{" "}
+                    {vehicle.homenet_model ||
+                      vehicle.homenet_model_number ||
                       "Vehicle Title Not Available"}
+                    {vehicle.homenet_standard_trim && (
+                      <span className="text-sm font-normal text-muted-foreground">
+                        {" "}
+                        {vehicle.homenet_standard_trim}
+                      </span>
+                    )}
                   </CardTitle>
                   <CardDescription className="mt-2 text-sm text-muted-foreground">
                     {vehicle.homenet_eng_description ||
@@ -477,10 +537,39 @@ const Index = () => {
                   </CardDescription>
                 </CardHeader>
 
-                <CardContent>
+                <CardContent className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Gauge className="h-4 w-4" />
+                    <span>
+                      {vehicle.homenet_mileage
+                        ? `${parseInt(vehicle.homenet_mileage).toLocaleString()} miles`
+                        : "Mileage N/A"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Paintbrush className="h-4 w-4" />
+                    <span>
+                      Exterior: {vehicle.homenet_exterior_color || "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Palette className="h-4 w-4" />
+                    <span>
+                      Interior: {vehicle.homenet_interior_color || "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-lg font-bold text-foreground">
+                    <DollarSign className="h-5 w-5" />
+                    <span>
+                      {vehicle.homenet_price
+                        ? `$${parseInt(vehicle.homenet_price).toLocaleString()}`
+                        : "Price N/A"}
+                    </span>
+                  </div>
+
                   {vehicle.web_url && (
                     <Button
-                      className="w-full gap-2"
+                      className="w-full gap-2 mt-4"
                       variant="default"
                       onClick={() =>
                         window.open(
