@@ -280,9 +280,8 @@ const Index = () => {
             </Button>
           </div>
         )}
-      )}
 
-      {/* Empty State */}
+        {/* Empty State */}
         {!isLoading && filteredItems.length === 0 && (
           <Card>
             <CardContent className="text-center py-12">
