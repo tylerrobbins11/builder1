@@ -219,42 +219,52 @@ const Index = () => {
                 >
                   <CardHeader>
                     <CardTitle className="text-lg">
-                      {vehicle.homenet_vehicle_title ||
-                        `${vehicle.homenet_year || ""} ${vehicle.homenet_make || ""} ${vehicle.homenet_model || ""}`.trim() ||
-                        "Vehicle Title"}
+                      {[
+                        vehicle.homenet_year,
+                        vehicle.homenet_make,
+                        vehicle.homenet_model,
+                        vehicle.homenet_standard_trim,
+                      ]
+                        .filter(Boolean)
+                        .join(" ") || "Vehicle Information"}
                     </CardTitle>
-                    <CardDescription>
-                      {vehicle.homenet_eng_description ||
-                        "Engine info not available"}
-                    </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-2">
-                    {vehicle.homenet_price && (
-                      <p className="text-xl font-bold">
-                        ${parseInt(vehicle.homenet_price).toLocaleString()}
-                      </p>
+                  <CardContent className="space-y-3">
+                    {/* Engine */}
+                    {vehicle.homenet_eng_description && (
+                      <div>
+                        <p className="text-sm text-muted-foreground">Engine</p>
+                        <p className="font-medium">
+                          {vehicle.homenet_eng_description}
+                        </p>
+                      </div>
                     )}
 
-                    {vehicle.homenet_mileage && (
-                      <p className="text-sm text-muted-foreground">
-                        {parseInt(vehicle.homenet_mileage).toLocaleString()}{" "}
-                        miles
-                      </p>
+                    {/* Exterior Color */}
+                    {vehicle.homenet_exterior_color && (
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Exterior Color
+                        </p>
+                        <p className="font-medium">
+                          {vehicle.homenet_exterior_color}
+                        </p>
+                      </div>
                     )}
 
-                    {(vehicle.homenet_exterior_color ||
-                      vehicle.homenet_interior_color) && (
-                      <p className="text-sm text-muted-foreground">
-                        {vehicle.homenet_exterior_color &&
-                          `Exterior: ${vehicle.homenet_exterior_color}`}
-                        {vehicle.homenet_exterior_color &&
-                          vehicle.homenet_interior_color &&
-                          " • "}
-                        {vehicle.homenet_interior_color &&
-                          `Interior: ${vehicle.homenet_interior_color}`}
-                      </p>
+                    {/* Interior Color */}
+                    {vehicle.homenet_interior_color && (
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Interior Color
+                        </p>
+                        <p className="font-medium">
+                          {vehicle.homenet_interior_color}
+                        </p>
+                      </div>
                     )}
 
+                    {/* Link Button - Only show if web_url exists */}
                     {vehicle.web_url && (
                       <Button
                         className="w-full gap-2 mt-4"
