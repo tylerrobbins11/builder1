@@ -47,7 +47,13 @@ const FALLBACK_DATA: ApiResponse = {
   data: [
     {
       homenet_vehicle_title: "2023 Chevrolet Silverado 1500 LT",
+      homenet_year: "2023",
+      homenet_make: "Chevrolet",
+      homenet_model: "Silverado 1500",
+      homenet_standard_trim: "LT",
       homenet_eng_description: "6.6L V8 Turbo Diesel",
+      homenet_exterior_color: "Summit White",
+      homenet_interior_color: "Jet Black",
       web_url: "https://example.com/vehicle/1",
       homenet_price: "45000",
       homenet_msrp: "48000",
@@ -55,7 +61,13 @@ const FALLBACK_DATA: ApiResponse = {
     },
     {
       homenet_vehicle_title: "2022 Ford F-150 XLT",
+      homenet_year: "2022",
+      homenet_make: "Ford",
+      homenet_model: "F-150",
+      homenet_standard_trim: "XLT",
       homenet_eng_description: "5.0L V8 Coyote",
+      homenet_exterior_color: "Oxford White",
+      homenet_interior_color: "Medium Earth Gray",
       web_url: "https://example.com/vehicle/2",
       homenet_price: "38000",
       homenet_msrp: "41000",
@@ -63,11 +75,59 @@ const FALLBACK_DATA: ApiResponse = {
     },
     {
       homenet_vehicle_title: "2024 Toyota Highlander Limited",
+      homenet_year: "2024",
+      homenet_make: "Toyota",
+      homenet_model: "Highlander",
+      homenet_standard_trim: "Limited",
       homenet_eng_description: "3.5L V6 Hybrid",
+      homenet_exterior_color: "Blueprint",
+      homenet_interior_color: "Black Leather",
       web_url: "https://example.com/vehicle/3",
       homenet_price: "52000",
       homenet_msrp: "55000",
       homenet_model_number: "TY98456",
+    },
+    {
+      homenet_vehicle_title: "2023 Honda Civic Sport",
+      homenet_year: "2023",
+      homenet_make: "Honda",
+      homenet_model: "Civic",
+      homenet_standard_trim: "Sport",
+      homenet_eng_description: "2.0L VTEC Turbo",
+      homenet_exterior_color: "Rallye Red",
+      homenet_interior_color: "Black Sport Cloth",
+      web_url: "https://example.com/vehicle/4",
+      homenet_price: "28000",
+      homenet_msrp: "30000",
+      homenet_model_number: "HD78123",
+    },
+    {
+      homenet_vehicle_title: "2024 BMW X5 xDrive40i",
+      homenet_year: "2024",
+      homenet_make: "BMW",
+      homenet_model: "X5",
+      homenet_standard_trim: "xDrive40i",
+      homenet_eng_description: "3.0L Turbo Inline-6",
+      homenet_exterior_color: "Alpine White",
+      homenet_interior_color: "Black Vernasca Leather",
+      web_url: "https://example.com/vehicle/5",
+      homenet_price: "65000",
+      homenet_msrp: "68000",
+      homenet_model_number: "BMW12345",
+    },
+    {
+      homenet_vehicle_title: "2023 Tesla Model Y Performance",
+      homenet_year: "2023",
+      homenet_make: "Tesla",
+      homenet_model: "Model Y",
+      homenet_standard_trim: "Performance",
+      homenet_eng_description: "Dual Motor All-Wheel Drive",
+      homenet_exterior_color: "Pearl White Multi-Coat",
+      homenet_interior_color: "All Black Premium Interior",
+      // No web_url to test button hiding
+      homenet_price: "58000",
+      homenet_msrp: "60000",
+      homenet_model_number: "TESLA001",
     },
   ],
 };
@@ -75,6 +135,7 @@ const FALLBACK_DATA: ApiResponse = {
 // Fetch actual inventory data with fallback
 const fetchInventory = async (): Promise<ApiResponse> => {
   try {
+    console.log("Attempting to fetch inventory data...");
     const response = await fetch(
       "/api/inventory?token=175grzjKeAfg1OYRKpAmcJ3ebaYZYi9Cn%2FNg2Ht8pDQ",
       {
@@ -83,7 +144,7 @@ const fetchInventory = async (): Promise<ApiResponse> => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        signal: AbortSignal.timeout(5000), // 5 second timeout
+        signal: AbortSignal.timeout(3000), // Reduced to 3 seconds for faster fallback
       },
     );
 
@@ -92,15 +153,12 @@ const fetchInventory = async (): Promise<ApiResponse> => {
     }
 
     const data = await response.json();
+    console.log("API data received:", data);
     return { ...data, _dataSource: "api" };
   } catch (error) {
-    console.log("Using fallback data due to API error:", error);
-    return new Promise((resolve) => {
-      setTimeout(
-        () => resolve({ ...FALLBACK_DATA, _dataSource: "fallback" }),
-        300,
-      );
-    });
+    console.log("API failed, using fallback data:", error);
+    // Return fallback data immediately
+    return { ...FALLBACK_DATA, _dataSource: "fallback" };
   }
 };
 
@@ -172,11 +230,16 @@ const Index = () => {
         </div>
 
         {!isLoading && (
-          <p className="text-sm text-muted-foreground mb-4">
-            Showing {paginatedItems.length} of {filteredItems.length} vehicles
-            {searchTerm && ` matching "${searchTerm}"`}
-            {totalPages > 1 && ` (Page ${currentPage} of ${totalPages})`}
-          </p>
+          <div className="mb-4">
+            <p className="text-sm text-muted-foreground">
+              Showing {paginatedItems.length} of {filteredItems.length} vehicles
+              {searchTerm && ` matching "${searchTerm}"`}
+              {totalPages > 1 && ` (Page ${currentPage} of ${totalPages})`}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Data loaded: {data?.data?.length || 0} total vehicles
+            </p>
+          </div>
         )}
 
         {/* Simple Search */}
