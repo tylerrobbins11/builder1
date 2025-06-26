@@ -26,15 +26,15 @@ interface VehicleItem {
   homenet_vehicle_title?: string;
   homenet_eng_description?: string;
   web_url?: string;
-  homenet_price?: string;
+  homenet_selling_price?: string;
   homenet_msrp?: string;
   homenet_model_number?: string;
   homenet_year?: string;
   homenet_make?: string;
   homenet_model?: string;
   homenet_mileage?: string;
-  homenet_exterior_color?: string;
-  homenet_interior_color?: string;
+  homenet_ext_color?: string;
+  homenet_int_color?: string;
   [key: string]: any;
 }
 
@@ -52,10 +52,10 @@ const FALLBACK_DATA: ApiResponse = {
       homenet_model: "Silverado 1500",
       homenet_standard_trim: "LT",
       homenet_eng_description: "6.6L V8 Turbo Diesel",
-      homenet_exterior_color: "Summit White",
-      homenet_interior_color: "Jet Black",
+      homenet_ext_color: "Summit White",
+      homenet_int_color: "Jet Black",
       web_url: "https://example.com/vehicle/1",
-      homenet_price: "45000",
+      homenet_selling_price: "45000",
       homenet_msrp: "48000",
       homenet_model_number: "CK20743",
     },
@@ -66,10 +66,10 @@ const FALLBACK_DATA: ApiResponse = {
       homenet_model: "F-150",
       homenet_standard_trim: "XLT",
       homenet_eng_description: "5.0L V8 Coyote",
-      homenet_exterior_color: "Oxford White",
-      homenet_interior_color: "Medium Earth Gray",
+      homenet_ext_color: "Oxford White",
+      homenet_int_color: "Medium Earth Gray",
       web_url: "https://example.com/vehicle/2",
-      homenet_price: "38000",
+      homenet_selling_price: "38000",
       homenet_msrp: "41000",
       homenet_model_number: "FD15892",
     },
@@ -80,10 +80,10 @@ const FALLBACK_DATA: ApiResponse = {
       homenet_model: "Highlander",
       homenet_standard_trim: "Limited",
       homenet_eng_description: "3.5L V6 Hybrid",
-      homenet_exterior_color: "Blueprint",
-      homenet_interior_color: "Black Leather",
+      homenet_ext_color: "Blueprint",
+      homenet_int_color: "Black Leather",
       web_url: "https://example.com/vehicle/3",
-      homenet_price: "52000",
+      homenet_selling_price: "52000",
       homenet_msrp: "55000",
       homenet_model_number: "TY98456",
     },
@@ -94,10 +94,10 @@ const FALLBACK_DATA: ApiResponse = {
       homenet_model: "Civic",
       homenet_standard_trim: "Sport",
       homenet_eng_description: "2.0L VTEC Turbo",
-      homenet_exterior_color: "Rallye Red",
-      homenet_interior_color: "Black Sport Cloth",
+      homenet_ext_color: "Rallye Red",
+      homenet_int_color: "Black Sport Cloth",
       web_url: "https://example.com/vehicle/4",
-      homenet_price: "28000",
+      homenet_selling_price: "28000",
       homenet_msrp: "30000",
       homenet_model_number: "HD78123",
     },
@@ -108,10 +108,10 @@ const FALLBACK_DATA: ApiResponse = {
       homenet_model: "X5",
       homenet_standard_trim: "xDrive40i",
       homenet_eng_description: "3.0L Turbo Inline-6",
-      homenet_exterior_color: "Alpine White",
-      homenet_interior_color: "Black Vernasca Leather",
+      homenet_ext_color: "Alpine White",
+      homenet_int_color: "Black Vernasca Leather",
       web_url: "https://example.com/vehicle/5",
-      homenet_price: "65000",
+      homenet_selling_price: "65000",
       homenet_msrp: "68000",
       homenet_model_number: "BMW12345",
     },
@@ -122,10 +122,10 @@ const FALLBACK_DATA: ApiResponse = {
       homenet_model: "Model Y",
       homenet_standard_trim: "Performance",
       homenet_eng_description: "Dual Motor All-Wheel Drive",
-      homenet_exterior_color: "Pearl White Multi-Coat",
-      homenet_interior_color: "All Black Premium Interior",
+      homenet_ext_color: "Pearl White Multi-Coat",
+      homenet_int_color: "All Black Premium Interior",
       // No web_url to test button hiding
-      homenet_price: "58000",
+      homenet_selling_price: "58000",
       homenet_msrp: "60000",
       homenet_model_number: "TESLA001",
     },
@@ -308,25 +308,25 @@ const Index = () => {
                     )}
 
                     {/* Exterior Color */}
-                    {vehicle.homenet_exterior_color && (
+                    {vehicle.homenet_ext_color && (
                       <div>
                         <p className="text-sm text-muted-foreground">
                           Exterior Color
                         </p>
                         <p className="font-medium">
-                          {vehicle.homenet_exterior_color}
+                          {vehicle.homenet_ext_color}
                         </p>
                       </div>
                     )}
 
                     {/* Interior Color */}
-                    {vehicle.homenet_interior_color && (
+                    {vehicle.homenet_int_color && (
                       <div>
                         <p className="text-sm text-muted-foreground">
                           Interior Color
                         </p>
                         <p className="font-medium">
-                          {vehicle.homenet_interior_color}
+                          {vehicle.homenet_int_color}
                         </p>
                       </div>
                     )}
@@ -342,15 +342,17 @@ const Index = () => {
                     )}
 
                     {/* Price */}
-                    {vehicle.homenet_price && (
+                    {vehicle.homenet_selling_price && (
                       <div>
                         <p className="text-sm text-muted-foreground">Price</p>
                         <p className="font-bold text-xl text-green-600">
-                          ${parseInt(vehicle.homenet_price).toLocaleString()}
+                          $
+                          {parseInt(
+                            vehicle.homenet_selling_price,
+                          ).toLocaleString()}
                         </p>
                       </div>
                     )}
-
                     {/* Link Button - Only show if web_url exists */}
                     {vehicle.web_url && (
                       <Button
