@@ -11,7 +11,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Car, Search, ExternalLink, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Car,
+  Search,
+  ExternalLink,
+  RefreshCw,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Vehicle interface for actual API data
@@ -85,7 +92,10 @@ const fetchInventory = async (): Promise<ApiResponse> => {
   } catch (error) {
     console.log("Using fallback data due to API error:", error);
     return new Promise((resolve) => {
-      setTimeout(() => resolve({ ...FALLBACK_DATA, _dataSource: "fallback" }), 300);
+      setTimeout(
+        () => resolve({ ...FALLBACK_DATA, _dataSource: "fallback" }),
+        300,
+      );
     });
   }
 };
@@ -135,7 +145,11 @@ const Index = () => {
           <Car className="h-8 w-8 text-primary" />
           <h1 className="text-3xl font-bold">Vehicle Inventory</h1>
           {data && (
-            <Badge variant={(data as any)._dataSource === "api" ? "default" : "secondary"}>
+            <Badge
+              variant={
+                (data as any)._dataSource === "api" ? "default" : "secondary"
+              }
+            >
               {(data as any)._dataSource === "api" ? "Live Data" : "Demo Mode"}
             </Badge>
           )}
@@ -176,7 +190,7 @@ const Index = () => {
       {/* Loading State */}
       {isLoading && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3].map((i) => (
+          {[1, 2, 3, 4, 5, 6].map((i) => (
             <Card key={i}>
               <CardHeader>
                 <Skeleton className="h-4 w-3/4" />
@@ -190,116 +204,132 @@ const Index = () => {
         </div>
       )}
 
-      {/* Simple Vehicle Cards */}
+      {/* Vehicle Cards */}
       {!isLoading && (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {paginatedItems.map((vehicle, index) => (
-            <Card key={vehicle.homenet_model_number || index} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-lg">
-                  {vehicle.homenet_vehicle_title ||
-                   `${vehicle.homenet_year || ''} ${vehicle.homenet_make || ''} ${vehicle.homenet_model || ''}`.trim() ||
-                   "Vehicle Title"}
-                </CardTitle>
-                <CardDescription>
-                  {vehicle.homenet_eng_description || "Engine info not available"}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                {vehicle.homenet_price && (
-                  <p className="text-xl font-bold">
-                    ${parseInt(vehicle.homenet_price).toLocaleString()}
-                  </p>
-                )}
+        <>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {paginatedItems.map((vehicle, index) => (
+              <Card
+                key={vehicle.homenet_model_number || index}
+                className="hover:shadow-lg transition-shadow"
+              >
+                <CardHeader>
+                  <CardTitle className="text-lg">
+                    {vehicle.homenet_vehicle_title ||
+                      `${vehicle.homenet_year || ""} ${vehicle.homenet_make || ""} ${vehicle.homenet_model || ""}`.trim() ||
+                      "Vehicle Title"}
+                  </CardTitle>
+                  <CardDescription>
+                    {vehicle.homenet_eng_description ||
+                      "Engine info not available"}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {vehicle.homenet_price && (
+                    <p className="text-xl font-bold">
+                      ${parseInt(vehicle.homenet_price).toLocaleString()}
+                    </p>
+                  )}
 
-                {vehicle.homenet_mileage && (
-                  <p className="text-sm text-muted-foreground">
-                    {parseInt(vehicle.homenet_mileage).toLocaleString()} miles
-                  </p>
-                )}
+                  {vehicle.homenet_mileage && (
+                    <p className="text-sm text-muted-foreground">
+                      {parseInt(vehicle.homenet_mileage).toLocaleString()} miles
+                    </p>
+                  )}
 
-                {(vehicle.homenet_exterior_color || vehicle.homenet_interior_color) && (
-                  <p className="text-sm text-muted-foreground">
-                    {vehicle.homenet_exterior_color && `Exterior: ${vehicle.homenet_exterior_color}`}
-                    {vehicle.homenet_exterior_color && vehicle.homenet_interior_color && " • "}
-                    {vehicle.homenet_interior_color && `Interior: ${vehicle.homenet_interior_color}`}
-                  </p>
-                )}
+                  {(vehicle.homenet_exterior_color ||
+                    vehicle.homenet_interior_color) && (
+                    <p className="text-sm text-muted-foreground">
+                      {vehicle.homenet_exterior_color &&
+                        `Exterior: ${vehicle.homenet_exterior_color}`}
+                      {vehicle.homenet_exterior_color &&
+                        vehicle.homenet_interior_color &&
+                        " • "}
+                      {vehicle.homenet_interior_color &&
+                        `Interior: ${vehicle.homenet_interior_color}`}
+                    </p>
+                  )}
 
-                {vehicle.web_url && (
-                  <Button
-                    className="w-full gap-2 mt-4"
-                    onClick={() => window.open(vehicle.web_url, "_blank")}
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    View Details
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-2 mt-8">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="gap-2"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Previous
-            </Button>
-
-            <div className="flex items-center gap-2">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <Button
-                  key={page}
-                  variant={currentPage === page ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setCurrentPage(page)}
-                  className="w-10"
-                >
-                  {page}
-                </Button>
-              ))}
-            </div>
-
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
-              className="gap-2"
-            >
-              Next
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+                  {vehicle.web_url && (
+                    <Button
+                      className="w-full gap-2 mt-4"
+                      onClick={() => window.open(vehicle.web_url, "_blank")}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      View Details
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        )}
 
-        {/* Empty State */}
-        {!isLoading && filteredItems.length === 0 && (
-          <Card>
-            <CardContent className="text-center py-12">
-              <Car className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No vehicles found</h3>
-              <p className="text-muted-foreground mb-4">
-                {searchTerm
-                  ? `No vehicles match "${searchTerm}"`
-                  : "No vehicles available"}
-              </p>
-              {searchTerm && (
-                <Button variant="outline" onClick={() => handleSearch("")}>
-                  Clear search
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-        )}
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-8">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="gap-2"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Previous
+              </Button>
+
+              <div className="flex items-center gap-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(page)}
+                      className="w-10"
+                    >
+                      {page}
+                    </Button>
+                  ),
+                )}
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className="gap-2"
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Empty State */}
+      {!isLoading && filteredItems.length === 0 && (
+        <Card>
+          <CardContent className="text-center py-12">
+            <Car className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No vehicles found</h3>
+            <p className="text-muted-foreground mb-4">
+              {searchTerm
+                ? `No vehicles match "${searchTerm}"`
+                : "No vehicles available"}
+            </p>
+            {searchTerm && (
+              <Button variant="outline" onClick={() => handleSearch("")}>
+                Clear search
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
